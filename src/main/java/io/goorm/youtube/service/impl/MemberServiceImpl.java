@@ -1,28 +1,23 @@
 package io.goorm.youtube.service.impl;
 
-import io.goorm.youtube.domain.Admin;
 import io.goorm.youtube.repository.MemberRepository;
 import io.goorm.youtube.domain.Member;
-import io.goorm.youtube.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@org.springframework.stereotype.Service
-public class MemberServiceImpl implements MemberService {
-
-
-
+@Service
+public class MemberServiceImpl {
     private MemberRepository memberRepository;
 
     @Autowired
     public MemberServiceImpl(MemberRepository mmberRepository) {
         this.memberRepository = mmberRepository;
     }
-
 
     public List<Member> findAll() {
 

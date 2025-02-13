@@ -1,20 +1,22 @@
 package io.goorm.youtube.service.impl;
 
 
-import io.goorm.youtube.domain.Member;
+import io.goorm.youtube.dto.VideoCreateDTO;
+import io.goorm.youtube.dto.VideoMainDTO;
 import io.goorm.youtube.repository.VideoRepository;
 import io.goorm.youtube.domain.Video;
-import io.goorm.youtube.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
-@org.springframework.stereotype.Service
-public class VideoServiceImpl implements VideoService {
-
+@Service
+public class VideoServiceImpl {
 
     private VideoRepository videoRepository;
 
@@ -23,60 +25,67 @@ public class VideoServiceImpl implements VideoService {
         this.videoRepository = videoRepository;
     }
 
-    public List<Video> findIndex() {
+    public List<VideoMainDTO> findIndex() {
 
-        return videoRepository.findAll();
+        return videoRepository.findIndex();
     }
 
-    public List<Video> findAll() {
+    public Page<VideoMainDTO> findAll(Pageable pageable) {
 
-        return videoRepository.findAll();
+        return videoRepository.findAllByDeleteYn("N", pageable);
     }
 
-    public Optional<Video> find(Long videoSeq) {
+    public VideoCreateDTO save(VideoCreateDTO videoCreateDTO) {
+        Video video = new Video();
+        BeanUtils.copyProperties(videoCreateDTO, video);
 
-        return videoRepository.findById(videoSeq);
+        Video savedVideo = videoRepository.save(video);
+        return videoRepository.findByVideoSeq(savedVideo.getVideoSeq())
+                .orElseThrow(() -> new RuntimeException("등록한 비디오를 찾을 수 없습니다."));
     }
 
-    public Video save(Video video) {
+//
+//    public Optional<Video> find(Long videoSeq) {
+//
+//        return videoRepository.findById(videoSeq);
+//    }
+//
 
-        return videoRepository.save(video);
-    }
-
-    public Video update(Video video) {
-
-        Video existingVideo = videoRepository.findById(video.getVideoSeq()).orElseThrow();
-
-        return videoRepository.save(existingVideo);
-
-    }
-
-    public Video updatePublishYn(Long vidoeSeq) {
-
-        Video existingVideo = videoRepository.findById(vidoeSeq).orElseThrow(() -> new RuntimeException("Admin not found"));
-
-        if (existingVideo != null && existingVideo.getPublishYn() == 1) {
-            existingVideo.setPublishYn(0);
-        } else {
-            existingVideo.setPublishYn(1);
-        }
-
-        return videoRepository.save(existingVideo);
-
-    }
-
-    public Video updateDeleteYn(Long vidoeSeq) {
-
-        Video existingVideo = videoRepository.findById(vidoeSeq).orElseThrow(() -> new RuntimeException("Admin not found"));
-
-        if (existingVideo != null && existingVideo.getDeleteYn().equals("N")) {
-            existingVideo.setDeleteYn("Y");
-        } else {
-            existingVideo.setDeleteYn("N");
-        }
-
-        return videoRepository.save(existingVideo);
-
-    }
+//
+//    public Video update(Video video) {
+//
+//        Video existingVideo = videoRepository.findById(video.getVideoSeq()).orElseThrow();
+//
+//        return videoRepository.save(existingVideo);
+//
+//    }
+//
+//    public Video updatePublishYn(Long vidoeSeq) {
+//
+//        Video existingVideo = videoRepository.findById(vidoeSeq).orElseThrow(() -> new RuntimeException("Admin not found"));
+//
+//        if (existingVideo != null && existingVideo.getPublishYn() == 1) {
+//            existingVideo.setPublishYn(0);
+//        } else {
+//            existingVideo.setPublishYn(1);
+//        }
+//
+//        return videoRepository.save(existingVideo);
+//
+//    }
+//
+//    public Video updateDeleteYn(Long vidoeSeq) {
+//
+//        Video existingVideo = videoRepository.findById(vidoeSeq).orElseThrow(() -> new RuntimeException("Admin not found"));
+//
+//        if (existingVideo != null && existingVideo.getDeleteYn().equals("N")) {
+//            existingVideo.setDeleteYn("Y");
+//        } else {
+//            existingVideo.setDeleteYn("N");
+//        }
+//
+//        return videoRepository.save(existingVideo);
+//
+//    }
 
 }

@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@DynamicInsert
 public class Member {
 
     @Id
@@ -30,7 +29,7 @@ public class Member {
     private String useYn;
     private String regDate;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "member_seq") // VIDEO 테이블에 외래키(member_seq) 생성
     private List<Video> videos;
 

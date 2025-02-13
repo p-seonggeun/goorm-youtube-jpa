@@ -3,15 +3,10 @@ package io.goorm.youtube.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-
-import java.util.List;
-
 
 @Setter
 @Getter
 @Entity
-@DynamicInsert
 public class Video {
 
     @Id
@@ -19,7 +14,7 @@ public class Video {
     private Long videoSeq;
 
     private String video;
-    private String videoThumnail;
+    private String videoThumbnail;
 
     private String title;
     private String content;
@@ -27,9 +22,13 @@ public class Video {
     private int publishYn;
     private String deleteYn;
 
-    private String memberSeq;
+    private Long member_seq;
 
     private String regDate;
 
-
+    public Video() {
+        this.publishYn = 0;
+        this.deleteYn = "N";
+        this.member_seq = 12L;
+    }
 }
